@@ -16,13 +16,14 @@ def download_metals_data():
     
     # Rename columns to be human-readable
     df.columns = ['Copper', 'Gold', 'Silver']
-    
+     
+
     if not os.path.exists('data'):
         os.makedirs('data')
     
     df.to_csv("data/metals_data.csv")
     print("Success! Data saved to data/metals_data.csv")
-    print(df.head())
+    print(data.shape)
 
 if __name__ == "__main__":
     download_metals_data()
