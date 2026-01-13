@@ -1,13 +1,22 @@
 import numpy as np
 import pandas as pd
 
-def calculate_sharpe_ratio(returns, rf_rate=0.04):
-    """Calculates annualized Sharpe Ratio."""
-    if returns.std() == 0:
-        return 0
-    ann_ret = (1 + returns.mean())**252 - 1
-    ann_vol = returns.std() * np.sqrt(252)
-    return (ann_ret - rf_rate) / ann_vol
+def calculate_sharpe_ratio(returns, risk_free_rate=0):
+    clean_returns = returns.replace([np.inf, -np.inf], np.nan).dropna()
+    
+    if clean_returns.std() == 0 or len(clean_returns) < 2:
+        return 0.0
+    
+    # Calculate daily sharpe
+    mean_daily = clean_returns.mean()
+    std_daily = clean_returns.std()
+    
+    daily_sharpe = (mean_daily - (risk_free_rate/252)) / std_daily
+    
+    # Annualize it
+    ann_sharpe = daily_sharpe * np.sqrt(252)
+    
+    return ann_sharpe
 
 def calculate_max_drawdown(cum_returns):
     """Calculates the maximum peak-to-trough decline."""
