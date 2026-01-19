@@ -57,3 +57,5 @@ scripts/: Contains modularized Python code for the backtesting engine and perfor
 notebooks/: Detailed exploratory data analysis and visualization of the equity curve.
 
 requirements.txt: List of dependencies required to reproduce the environment.
+
+![Final Strategy Performance](results_chart.png)
