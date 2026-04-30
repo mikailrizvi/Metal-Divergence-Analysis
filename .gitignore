@@ -30,3 +30,6 @@ results/tables/*
 # Local secrets
 .env
 *.local
+
+# Claude Code local session state
+.claude/
