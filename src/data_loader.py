@@ -17,6 +17,18 @@ from src.config import Config
 
 logger = logging.getLogger(__name__)
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _resolve(path: str | Path) -> Path:
+    """Resolve a path: absolute as-is, relative anchored at the project root.
+
+    Prevents duplicate caches when code is invoked from different CWDs
+    (notebook in notebooks/, script in repo root, pytest in tests/, etc.).
+    """
+    p = Path(path)
+    return p if p.is_absolute() else PROJECT_ROOT / p
+
 
 @dataclass(frozen=True)
 class DataQualityReport:
@@ -227,8 +239,8 @@ def load_pair_data(config: Config, refresh: bool = False) -> pd.DataFrame:
         Indexed by date (business-day frequency), columns:
         ['gold', 'silver', 'log_gold', 'log_silver'].
     """
-    processed_path = Path(config.data.processed_cache_path)
-    raw_path = Path(config.data.raw_cache_path)
+    processed_path = _resolve(config.data.processed_cache_path)
+    raw_path = _resolve(config.data.raw_cache_path)
 
     if processed_path.is_file() and not refresh:
         logger.info("loading processed cache: %s", processed_path)
