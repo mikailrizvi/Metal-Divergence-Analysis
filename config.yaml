@@ -1,0 +1,49 @@
+# Strategy & pipeline parameters. No magic numbers in source files.
+
+data:
+  ticker_gold: "GLD"
+  ticker_silver: "SLV"
+  start_date: "2007-01-01"
+  end_date: null            # null = today
+  raw_cache_path: "data/raw/prices.parquet"
+  processed_cache_path: "data/processed/prices.parquet"
+  max_forward_fill_days: 1
+
+cointegration:
+  rolling_window_days: 504  # ~2 trading years
+  rolling_step_days: 21     # ~1 trading month
+  significance_level: 0.05
+  rolling_cache_path: "data/processed/rolling_coint.parquet"
+
+spread:
+  beta_window_days: 60      # rolling OLS window for hedge ratio
+
+ou:
+  min_half_life_days: 5
+  max_half_life_days: 50
+
+signals:
+  entry_z: 2.0
+  exit_z: 0.5
+  stop_z: 4.0
+  zscore_window_multiplier: 4   # window = round(multiplier * half_life)
+  time_stop_multiplier: 3        # exit after multiplier * half_life days
+
+backtest:
+  starting_capital: 100000.0
+  train_years: 3
+  test_years: 1
+  step_years: 1
+  cost_bps_per_leg: 5.0          # 5 bps per leg, 20 bps round-trip
+  borrow_bps_annualized: 50.0    # short-side borrow cost
+  half_spread_bps: 0.0           # set >0 if modeling bid-ask separately
+
+filters:
+  vol_lookback_days: 20
+  vol_percentile_cutoff: 0.95
+  coint_pvalue_cutoff: 0.10
+
+random_seed: 42
+
+logging:
+  level: "INFO"
